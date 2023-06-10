@@ -1,0 +1,6 @@
+[submodule "lobster"]
+	path = lobster
+	url = https://github.com/aardappel/lobster
+[submodule "cppdap"]
+	path = cppdap
+	url = https://github.com/google/cppdap/
