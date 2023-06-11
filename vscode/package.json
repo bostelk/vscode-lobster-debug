@@ -1,0 +1,152 @@
+{
+  "name": "lobster-debug",
+  "displayName": "Lobster Debug",
+  "version": "0.0.0",
+  "publisher": "bostelk",
+  "description": "Lobster debug extension",
+  "author": {
+    "name": "Kyle Bostelmann"
+  },
+  "license": "MIT",
+  "keywords": [
+  ],
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "icon": "images/lobster-debug-icon.png",
+  "categories": [
+    "Debuggers"
+  ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bostelk/vscode-lobster-debug.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bostelk/vscode-lobster-debug/issues"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint \"src/**/*.ts\"",
+		"watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.34",
+		"@types/vscode": "^1.73.0",
+		"@typescript-eslint/eslint-plugin": "^5.42.0",
+		"@typescript-eslint/parser": "^5.42.0",
+		"eslint": "^8.26.0",
+		"typescript": "^5.1.3"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onDebug"
+  ],
+  "workspaceTrust": {
+    "request": "never"
+  },
+  "contributes": {
+    "languages": [{
+      "id": "lobster",
+      "aliases": ["Lobster", "lobster"],
+      "extensions": [".lobster"]
+    }],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "extension.lobster-debug.runEditorContents",
+          "when": "resourceLangId == lobster",
+          "group": "navigation@1"
+        },
+        {
+          "command": "extension.lobster-debug.debugEditorContents",
+          "when": "resourceLangId == lobster",
+          "group": "navigation@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "extension.lobster-debug.debugEditorContents",
+          "when": "resourceLangId == lobster"
+        },
+        {
+          "command": "extension.lobster-debug.runEditorContents",
+          "when": "resourceLangId == lobster"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "extension.lobster-debug.debugEditorContents",
+        "title": "Debug File",
+        "category": "Lobster Debug",
+        "enablement": "!inDebugMode",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "extension.lobster-debug.runEditorContents",
+        "title": "Run File",
+        "category": "Lobster Debug",
+        "enablement": "!inDebugMode",
+        "icon": "$(play)"
+      }
+    ],
+    "breakpoints": [{ "language": "lobster" }],
+    "debuggers": [
+      {
+        "type": "lobster",
+        "label": "Lobster Debug",
+        "windows" : {
+          "program": "./bin/hello_debugger.exe"
+        },
+
+        "configurationAttributes": {
+          "launch": {
+            "required": ["program"],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to a text file.",
+                "default": "${workspaceFolder}/${command:AskForProgramName}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch.",
+                "default": true
+              }
+            }
+          }
+        },
+
+        "initialConfigurations": [
+          {
+            "type": "lobster",
+            "request": "launch",
+            "name": "Ask for file name",
+            "program": "${workspaceFolder}/${command:AskForProgramName}",
+            "stopOnEntry": true
+          }
+        ],
+
+        "configurationSnippets": [
+          {
+            "label": "Lobster Debug: Launch",
+            "description": "A new configuration for launching a lobster debug program",
+            "body": {
+              "type": "lobster",
+              "request": "launch",
+              "name": "${2:Launch Program}",
+              "program": "^\"\\${workspaceFolder}/${1:Program}\""
+            }
+          }
+        ],
+
+        "variables": {
+          "AskForProgramName": "extension.lobster-debug.getProgramName"
+        }
+      }
+    ]
+  }
+}
