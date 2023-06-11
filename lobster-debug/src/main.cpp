@@ -45,94 +45,9 @@
 #include <lobster/tonative.h>
 #include <lobster/vmdata.h>
 
+#include <lobster-debug/hello.h>
+
 namespace {
-
-// sourceContent holds the synthetic file source.
-constexpr char sourceContent[] = R"(// Hello Debugger!
-
-This is a synthetic source file provided by the DAP debugger.
-
-You can set breakpoints, and single line step.
-
-You may also notice that the locals contains a single variable for the currently executing line number.)";
-
-// Total number of newlines in source.
-constexpr int64_t numSourceLines = 7;
-
-// Debugger holds the dummy debugger state and fires events to the EventHandler
-// passed to the constructor.
-class Debugger {
- public:
-  enum class Event { BreakpointHit, Stepped, Paused };
-  using EventHandler = std::function<void(Event)>;
-
-  Debugger(const EventHandler&);
-
-  // run() instructs the debugger to continue execution.
-  void run();
-
-  // pause() instructs the debugger to pause execution.
-  void pause();
-
-  // currentLine() returns the currently executing line number.
-  int64_t currentLine();
-
-  // stepForward() instructs the debugger to step forward one line.
-  void stepForward();
-
-  // clearBreakpoints() clears all set breakpoints.
-  void clearBreakpoints();
-
-  // addBreakpoint() sets a new breakpoint on the given line.
-  void addBreakpoint(int64_t line);
-
- private:
-  EventHandler onEvent;
-  std::mutex mutex;
-  int64_t line = 1;
-  std::unordered_set<int64_t> breakpoints;
-};
-
-Debugger::Debugger(const EventHandler& onEvent) : onEvent(onEvent) {}
-
-void Debugger::run() {
-  std::unique_lock<std::mutex> lock(mutex);
-  for (int64_t i = 0; i < numSourceLines; i++) {
-    int64_t l = ((line + i) % numSourceLines) + 1;
-    if (breakpoints.count(l)) {
-      line = l;
-      lock.unlock();
-      onEvent(Event::BreakpointHit);
-      return;
-    }
-  }
-}
-
-void Debugger::pause() {
-  onEvent(Event::Paused);
-}
-
-int64_t Debugger::currentLine() {
-  std::unique_lock<std::mutex> lock(mutex);
-  return line;
-}
-
-void Debugger::stepForward() {
-  std::unique_lock<std::mutex> lock(mutex);
-  line = (line % numSourceLines) + 1;
-  lock.unlock();
-  onEvent(Event::Stepped);
-}
-
-void Debugger::clearBreakpoints() {
-  std::unique_lock<std::mutex> lock(mutex);
-  this->breakpoints.clear();
-}
-
-void Debugger::addBreakpoint(int64_t l) {
-  std::unique_lock<std::mutex> lock(mutex);
-  this->breakpoints.emplace(l);
-}
 
 // Event provides a basic wait and signal synchronization primitive.
 class Event {
