@@ -38,6 +38,13 @@
 #include <io.h>     // _setmode
 #endif              // OS_WINDOWS
 
+#include <lobster/stdafx.h>
+#include <lobster/compiler.h>
+#include <lobster/il.h>
+#include <lobster/disasm.h>
+#include <lobster/tonative.h>
+#include <lobster/vmdata.h>
+
 namespace {
 
 // sourceContent holds the synthetic file source.
@@ -217,6 +224,43 @@ int main(int, char*[]) {
 
   // Construct the debugger.
   Debugger debugger(onDebuggerEvent);
+
+  bool parsedump = false;
+  bool disasm = false;
+  bool dump_builtins = false;
+  bool dump_names = false;
+  bool dump_leaks = false;
+  bool tcc_out = false;
+  bool compile_only = false;
+  bool non_interactive_test = false;
+  bool full_error = false;
+  int runtime_checks = lobster::RUNTIME_ASSERT_PLUS;
+  int max_errors = 1;
+  lobster::TraceMode trace = lobster::TraceMode::OFF;
+
+  lobster::NativeRegistry nfr;
+  FileLoader loader;
+
+  string bytecode_buffer;
+
+  string mainfile;
+  string fn;
+
+  const char* export_names[] = { "compiled_entry_point", "vtables",
+                              nullptr };
+
+  vector<string> program_args;
+
+  auto vmargs = lobster::VMArgs{ nfr,
+                                              string(fn),
+                                              (uint8_t*)bytecode_buffer.data(),
+                                              bytecode_buffer.size(),
+                                              std::move(program_args),
+                                              (lobster::fun_base_t*)nullptr,
+                                              (lobster::fun_base_t)nullptr,
+                                              trace,
+                                              dump_leaks,
+                                              runtime_checks };
 
   // Handle errors reported by the Session. These errors include protocol
   // parsing errors and receiving messages with no handler.
