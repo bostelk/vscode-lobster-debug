@@ -8,10 +8,9 @@
     "name": "Kyle Bostelmann"
   },
   "license": "MIT",
-  "keywords": [
-  ],
+  "keywords": [],
   "engines": {
-    "vscode": "^1.66.0"
+    "vscode": "^1.73.0"
   },
   "icon": "images/lobster-debug-icon.png",
   "categories": [
@@ -27,18 +26,19 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint \"src/**/*.ts\"",
-		"watch": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "lint": "eslint \"src/**/*.ts\"",
+    "watch": "tsc -watch -p ./",
     "package": "vsce package"
   },
   "devDependencies": {
     "@types/node": "^16.18.34",
-		"@types/vscode": "^1.73.0",
-		"@typescript-eslint/eslint-plugin": "^5.42.0",
-		"@typescript-eslint/parser": "^5.42.0",
-		"eslint": "^8.26.0",
-		"typescript": "^5.1.3"
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.26.0",
+    "typescript": "^5.1.3",
+    "@vscode/vsce": "^2.15.0"
   },
   "main": "./out/extension.js",
   "activationEvents": [
@@ -48,11 +48,18 @@
     "request": "never"
   },
   "contributes": {
-    "languages": [{
-      "id": "lobster",
-      "aliases": ["Lobster", "lobster"],
-      "extensions": [".lobster"]
-    }],
+    "languages": [
+      {
+        "id": "lobster",
+        "aliases": [
+          "Lobster",
+          "lobster"
+        ],
+        "extensions": [
+          ".lobster"
+        ]
+      }
+    ],
     "menus": {
       "editor/title/run": [
         {
@@ -93,18 +100,23 @@
         "icon": "$(play)"
       }
     ],
-    "breakpoints": [{ "language": "lobster" }],
+    "breakpoints": [
+      {
+        "language": "lobster"
+      }
+    ],
     "debuggers": [
       {
         "type": "lobster",
         "label": "Lobster Debug",
-        "windows" : {
+        "windows": {
           "program": "./bin/lobster-debug.exe"
         },
-
         "configurationAttributes": {
           "launch": {
-            "required": ["program"],
+            "required": [
+              "program"
+            ],
             "properties": {
               "program": {
                 "type": "string",
@@ -119,7 +131,6 @@
             }
           }
         },
-
         "initialConfigurations": [
           {
             "type": "lobster",
@@ -129,7 +140,6 @@
             "stopOnEntry": true
           }
         ],
-
         "configurationSnippets": [
           {
             "label": "Lobster Debug: Launch",
@@ -142,7 +152,6 @@
             }
           }
         ],
-
         "variables": {
           "AskForProgramName": "extension.lobster-debug.getProgramName"
         }
