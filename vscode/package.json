@@ -99,7 +99,7 @@
         "type": "lobster",
         "label": "Lobster Debug",
         "windows" : {
-          "program": "./bin/hello_debugger.exe"
+          "program": "./bin/lobster-debug.exe"
         },
 
         "configurationAttributes": {

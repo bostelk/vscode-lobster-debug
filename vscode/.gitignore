@@ -1,2 +1,9 @@
-﻿bin
+﻿# debug adapter binaries
+bin
+
+# typescript to javascript output
+out
+
+# npm modules
 node_modules
+
