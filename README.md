@@ -44,6 +44,7 @@ You can now set a breakpoint in the source file and restart the program to debug
 To publish the extension open a terminal and run:
 
 ```
+cd vscode
 npm run package
 ```
 
