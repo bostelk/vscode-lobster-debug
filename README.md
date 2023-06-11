@@ -47,3 +47,5 @@ To publish the extension open a terminal and run:
 npm run package
 ```
 
+A new file "lobster-debug-0.0.0.vsix" is output which can published to a marketplace or installed into vscode.
+
